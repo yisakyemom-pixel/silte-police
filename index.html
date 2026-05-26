@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>የስልጤ ዞን ፖሊስ መዝገብ</title>
+    <title>የስልጤ ዞን ፖሊስ መዝገብ - Smart System</title>
     <style>
         :root {
             --primary-color: #003366;
             --secondary-color: #002244;
             --bg-color: #f0f2f5;
+            --danger-color: #dc3545;
         }
 
         body { 
@@ -30,7 +31,6 @@
             box-shadow: 0px 10px 25px rgba(0,0,0,0.1);
         } 
 
-        .logo-container { margin-bottom: 15px; }
         .dept-logo { 
             width: 100px; 
             height: 100px; 
@@ -38,6 +38,7 @@
             border-radius: 50%; 
             border: 3px solid var(--primary-color); 
             padding: 5px; 
+            margin-bottom: 15px;
         } 
 
         h2 { color: var(--primary-color); margin-bottom: 5px; font-size: 20px; }
@@ -51,13 +52,7 @@
             border-radius: 8px; 
             box-sizing: border-box; 
             font-size: 16px; 
-            outline: none;
             font-family: inherit;
-        }
-        
-        input:focus, select:focus, textarea:focus { 
-            border-color: var(--primary-color); 
-            box-shadow: 0 0 5px rgba(0,51,102,0.2); 
         }
         
         button { 
@@ -70,14 +65,12 @@
             width: 100%; 
             font-size: 18px; 
             font-weight: bold; 
-            transition: 0.3s; 
         }
 
-        button:hover { background-color: var(--secondary-color); }
         button:disabled { background-color: #999; }
 
         .logout-btn {
-            background-color: #dc3545;
+            background-color: var(--danger-color);
             margin-top: 20px;
             font-size: 14px;
             padding: 10px;
@@ -87,13 +80,15 @@
             cursor: pointer;
         }
 
-        #status, #loginStatus { 
+        #status { 
             margin-top: 20px; 
             font-weight: bold; 
-            min-height: 20px;
+            padding: 10px;
+            border-radius: 5px;
         }
-        .success { color: #28a745; }
-        .error { color: #dc3545; }
+        .success { color: #28a745; background: #e8f5e9; }
+        .error { color: var(--danger-color); background: #ffebee; }
+        .warning { color: #856404; background: #fff3cd; border: 1px solid #ffeeba; }
 
         #mainFormSection { display: none; }
     </style>
@@ -101,12 +96,9 @@
 <body> 
 
 <div class="container" id="loginSection">
-    <div class="logo-container">
-        <img src="https://i.postimg.cc/6qMpxWdq/1779820211868.jpg" alt="Logo" class="dept-logo">
-    </div>
+    <img src="https://i.postimg.cc/6qMpxWdq/1779820211868.jpg" alt="Logo" class="dept-logo">
     <h2>የስልጤ ዞን ፖሊስ መምሪያ</h2>
     <h3>ለመቀጠል መጀመሪያ ይግቡ</h3>
-    
     <form id="loginForm">
         <input type="text" id="username" placeholder="የተጠቃሚ ስም" required>
         <input type="password" id="password" placeholder="የይለፍ ቃል" required>
@@ -116,15 +108,11 @@
 </div> 
 
 <div class="container" id="mainFormSection">
-    <div class="logo-container">
-        <img src="https://i.postimg.cc/6qMpxWdq/1779820211868.jpg" alt="Logo" class="dept-logo">
-    </div>
+    <img src="https://i.postimg.cc/6qMpxWdq/1779820211868.jpg" alt="Logo" class="dept-logo">
     <h2>የወንጀለኛ መረጃ መመዝገቢያ</h2>
-    <hr style="opacity: 0.2; margin-bottom: 20px;">
-    
+    <hr style="opacity: 0.2;">
     <form id="policeForm">
         <input type="text" name="fullname" placeholder="የወንጀለኛው ሙሉ ስም" required>
-        
         <div style="display: flex; gap: 10px;">
             <input type="number" name="age" placeholder="እድሜ" style="flex: 1;" required>
             <select name="gender" style="flex: 1;" required>
@@ -133,7 +121,6 @@
                 <option value="ሴት">ሴት</option>
             </select>
         </div>
-
         <select name="crime" required>
             <option value="">የወንጀል አይነት ይምረጡ</option>
             <option value="ስርቆት">ስርቆት</option>
@@ -141,71 +128,64 @@
             <option value="ማጭበርበር">ማጭበርበር</option>
             <option value="ሌላ">ሌላ</option>
         </select>
-
         <input type="text" name="location" placeholder="የተያዘበት ቦታ (ወረዳ/ቀበሌ)" required>
-        
         <textarea name="description" placeholder="የወንጀሉ ዝርዝር መግለጫ..." rows="3"></textarea>
-
         <button type="submit" id="submitBtn">መረጃውን መዝግብ</button>
     </form>
-    
     <div id="status"></div>
     <button class="logout-btn" onclick="location.reload()">ውጣ</button>
 </div> 
 
 <script>
-    // የእርስዎ አዲሱ Google Script URL ተተክቷል
-    const scriptURL = 'https://script.google.com/macros/s/AKfycby4UmCt_NLOtJeCDi1CFE5bVSebRjEWBSN62YXj_rmsWiWadV28_zWizm6oTHoXFiEaQg/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyL2kDVBvrBncr6Zoz0JBkomvcgODF71jnpSwxvlbjtC7-MUeCVdcVSNe0sv6Zf-PHctw/exec';
     
     const CORRECT_USERNAME = "silti_police"; 
     const CORRECT_PASSWORD = "Ye21334304";  
 
-    // የመግቢያ ክፍል
     document.getElementById('loginForm').addEventListener('submit', e => {
         e.preventDefault();
-        const u = document.getElementById('username').value;
-        const p = document.getElementById('password').value; 
-
-        if (u === CORRECT_USERNAME && p === CORRECT_PASSWORD) {
+        if (document.getElementById('username').value === CORRECT_USERNAME && 
+            document.getElementById('password').value === CORRECT_PASSWORD) {
             document.getElementById('loginSection').style.display = "none";
             document.getElementById('mainFormSection').style.display = "block";
         } else {
-            const ls = document.getElementById('loginStatus');
-            ls.className = "error";
-            ls.innerText = "ስህተት! የተጠቃሚ ስም ወይም የይለፍ ቃል አልተዛመደም።";
+            document.getElementById('loginStatus').innerText = "ስህተት! ይሞክሩ።";
+            document.getElementById('loginStatus').style.color = "red";
         }
     }); 
 
-    // መረጃ የመላኪያ ክፍል
     const form = document.getElementById('policeForm');
     const statusText = document.getElementById('status');
     const submitBtn = document.getElementById('submitBtn'); 
 
     form.addEventListener('submit', e => {
         e.preventDefault();
-        
-        if(!confirm("ይህንን መረጃ ለመመዝገብ እርግጠኛ ነዎት?")) return;
+        if(!confirm("ለመመዝገብ እርግጠኛ ነዎት?")) return;
 
         submitBtn.disabled = true;
         statusText.className = "";
-        statusText.innerText = "መረጃው እየተላከ ነው..."; 
+        statusText.innerText = "በመፈተሽ ላይ..."; 
 
-        const formData = new FormData(form);
-
-        fetch(scriptURL, { method: 'POST', body: formData})
-            .then(response => {
-                statusText.className = "success";
-                statusText.innerText = "በተሳካ ሁኔታ ተመዝግቧል! ✅";
+        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+            .then(response => response.text())
+            .then(result => {
+                if (result.trim() === "ALREADY_EXISTS") {
+                    statusText.className = "warning";
+                    statusText.innerText = "⚠️ ማስጠንቀቂያ፡ ይህ ግለሰብ ከዚህ በፊት ሪከርድ አለበት!";
+                    alert("ማስጠንቀቂያ፡ ይህ ግለሰብ ቀድሞ ተመዝግቧል!");
+                } else {
+                    statusText.className = "success";
+                    statusText.innerText = "በተሳካ ሁኔታ ተመዝግቧል! ✅";
+                    form.reset(); 
+                }
                 submitBtn.disabled = false;
-                form.reset(); 
             })
             .catch(error => {
                 statusText.className = "error";
-                statusText.innerText = "ስህተት አጋጥሟል! (ምናልባት በGoogle Script በኩል ጾታ እና መግለጫን እንዲቀበል አልተስተካከለ ይሆናል)።";
+                statusText.innerText = "ስህተት አጋጥሟል!";
                 submitBtn.disabled = false;
             });
     });
 </script> 
-
 </body>
 </html>
