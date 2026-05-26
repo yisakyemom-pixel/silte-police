@@ -24,14 +24,13 @@
             box-shadow: 0px 10px 25px rgba(0,0,0,0.1);
         } 
 
-        /* የሎጎ ስታይል ማስተካከያ */
         .logo-container { 
             margin-bottom: 15px; 
         }
         .dept-logo { 
             width: 120px; 
             height: 120px; 
-            object-fit: contain; /* አርማው ሳይቆራረጥ ሙሉ በሙሉ እንዲታይ */
+            object-fit: contain; 
             border-radius: 50%; 
             border: 3px solid #003366; 
             padding: 5px; 
@@ -88,7 +87,6 @@
         .error { color: #dc3545; }
         .loading { color: #003366; } 
 
-        /* መጀመሪያ ፎርሙ እንዲደበቅ */
         #mainFormSection { display: none; }
     </style>
 </head>
@@ -96,7 +94,7 @@
 
 <div class="container" id="loginSection">
     <div class="logo-container">
-        <img src="https://i.ibb.co/6RTP0vF7/1779820211868.jpg" alt="Siltie Police Logo" class="dept-logo">
+        <img src="https://i.postimg.cc/6qMpxWdq/1779820211868.jpg" alt="Siltie Police Logo" class="dept-logo">
     </div>
     <h2>የስልጤ ዞን ፖሊስ መምሪያ</h2>
     <h3>መረጃ ለመመዝገብ መጀመሪያ ይግቡ</h3>
@@ -111,7 +109,7 @@
 
 <div class="container" id="mainFormSection">
     <div class="logo-container">
-        <img src="https://i.ibb.co/6RTP0vF7/1779820211868.jpg" alt="Siltie Police Logo" class="dept-logo">
+        <img src="https://i.postimg.cc/6qMpxWdq/1779820211868.jpg" alt="Siltie Police Logo" class="dept-logo">
     </div>
     <h2>የስልጤ ዞን ፖሊስ መምሪያ</h2>
     <h3>የወንጀለኛ መረጃ መመዝገቢያ</h3>
@@ -135,16 +133,15 @@
 <script>
     const scriptURL = 'https://script.google.com/macros/s/AKfycbzaQVgxwZYMeAXTWgjHKLGyLYfSYK2nGW25uBzLtf3Zn1Tqjf8US41z7-IYLX86G3RJ/exec';
     
-    // የሙከራ Login መረጃ
-    const CORRECT_USERNAME = "admin"; 
-    const CORRECT_PASSWORD = "123";  
+    // የተጠቃሚ መረጃ
+    const CORRECT_USERNAME = "silti_police"; 
+    const CORRECT_PASSWORD = "Ye21334304";  
 
     const loginForm = document.getElementById('loginForm');
     const loginSection = document.getElementById('loginSection');
     const mainFormSection = document.getElementById('mainFormSection');
     const loginStatus = document.getElementById('loginStatus'); 
 
-    // የLogin ማረጋገጫ ተግባር
     loginForm.addEventListener('submit', e => {
         e.preventDefault();
         const u = document.getElementById('username').value;
@@ -163,7 +160,6 @@
         }
     }); 
 
-    // ዳታ ወደ Google Sheets መላክ
     const form = document.getElementById('policeForm');
     const statusText = document.getElementById('status');
     const submitBtn = document.getElementById('submitBtn'); 
