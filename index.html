@@ -43,7 +43,6 @@
         h2 { color: var(--primary-color); margin-bottom: 5px; font-size: 20px; }
         h3 { color: #666; margin-top: 0; font-size: 15px; margin-bottom: 25px; }
         
-        /* Input Styling */
         input, select, textarea { 
             width: 100%; 
             padding: 12px; 
@@ -82,6 +81,10 @@
             margin-top: 20px;
             font-size: 14px;
             padding: 10px;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
         }
 
         #status, #loginStatus { 
@@ -151,13 +154,13 @@
 </div> 
 
 <script>
-    // የእርስዎን Google Script URL እዚህ ይተኩ
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbzaQVgxwZYMeAXTWgjHKLGyLYfSYK2nGW25uBzLtf3Zn1Tqjf8US41z7-IYLX86G3RJ/exec';
+    // የእርስዎ አዲሱ Google Script URL ተተክቷል
+    const scriptURL = 'https://script.google.com/macros/s/AKfycby4UmCt_NLOtJeCDi1CFE5bVSebRjEWBSN62YXj_rmsWiWadV28_zWizm6oTHoXFiEaQg/exec';
     
     const CORRECT_USERNAME = "silti_police"; 
     const CORRECT_PASSWORD = "Ye21334304";  
 
-    // Login logic
+    // የመግቢያ ክፍል
     document.getElementById('loginForm').addEventListener('submit', e => {
         e.preventDefault();
         const u = document.getElementById('username').value;
@@ -173,7 +176,7 @@
         }
     }); 
 
-    // Form submission logic
+    // መረጃ የመላኪያ ክፍል
     const form = document.getElementById('policeForm');
     const statusText = document.getElementById('status');
     const submitBtn = document.getElementById('submitBtn'); 
@@ -187,7 +190,9 @@
         statusText.className = "";
         statusText.innerText = "መረጃው እየተላከ ነው..."; 
 
-        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+        const formData = new FormData(form);
+
+        fetch(scriptURL, { method: 'POST', body: formData})
             .then(response => {
                 statusText.className = "success";
                 statusText.innerText = "በተሳካ ሁኔታ ተመዝግቧል! ✅";
@@ -196,7 +201,7 @@
             })
             .catch(error => {
                 statusText.className = "error";
-                statusText.innerText = "ስህተት አጋጥሟል! እንደገና ይሞክሩ።";
+                statusText.innerText = "ስህተት አጋጥሟል! (ምናልባት በGoogle Script በኩል ጾታ እና መግለጫን እንዲቀበል አልተስተካከለ ይሆናል)።";
                 submitBtn.disabled = false;
             });
     });
