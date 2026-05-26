@@ -24,13 +24,14 @@
             box-shadow: 0px 10px 25px rgba(0,0,0,0.1);
         } 
 
+        /* የሎጎ ስታይል ማስተካከያ */
         .logo-container { 
             margin-bottom: 15px; 
         }
         .dept-logo { 
             width: 120px; 
             height: 120px; 
-            object-fit: contain; 
+            object-fit: contain; /* አርማው ሳይቆራረጥ ሙሉ በሙሉ እንዲታይ */
             border-radius: 50%; 
             border: 3px solid #003366; 
             padding: 5px; 
@@ -81,12 +82,13 @@
             margin-top: 20px; 
             font-weight: bold; 
             font-size: 15px; 
-            line-height: 1.6;
+            min-height: 24px; 
         }
         .success { color: #28a745; }
         .error { color: #dc3545; }
         .loading { color: #003366; } 
 
+        /* መጀመሪያ ፎርሙ እንዲደበቅ */
         #mainFormSection { display: none; }
     </style>
 </head>
@@ -94,7 +96,7 @@
 
 <div class="container" id="loginSection">
     <div class="logo-container">
-        <img src="https://i.postimg.cc/6qMpxWdq/1779820211868.jpg" alt="Siltie Police Logo" class="dept-logo">
+        <img src="https://i.ibb.co/6RTP0vF7/1779820211868.jpg" alt="Siltie Police Logo" class="dept-logo">
     </div>
     <h2>የስልጤ ዞን ፖሊስ መምሪያ</h2>
     <h3>መረጃ ለመመዝገብ መጀመሪያ ይግቡ</h3>
@@ -109,7 +111,7 @@
 
 <div class="container" id="mainFormSection">
     <div class="logo-container">
-        <img src="https://i.postimg.cc/6qMpxWdq/1779820211868.jpg" alt="Siltie Police Logo" class="dept-logo">
+        <img src="https://i.ibb.co/6RTP0vF7/1779820211868.jpg" alt="Siltie Police Logo" class="dept-logo">
     </div>
     <h2>የስልጤ ዞን ፖሊስ መምሪያ</h2>
     <h3>የወንጀለኛ መረጃ መመዝገቢያ</h3>
@@ -131,17 +133,18 @@
 </div> 
 
 <script>
-    // ያንተ የቀጥታ ሊንክ እዚህ ገብቷል
     const scriptURL = 'https://script.google.com/macros/s/AKfycbzaQVgxwZYMeAXTWgjHKLGyLYfSYK2nGW25uBzLtf3Zn1Tqjf8US41z7-IYLX86G3RJ/exec';
     
-    const CORRECT_USERNAME = "silti_police"; 
-    const CORRECT_PASSWORD = "Ye21334304";  
+    // የሙከራ Login መረጃ
+    const CORRECT_USERNAME = "admin"; 
+    const CORRECT_PASSWORD = "123";  
 
     const loginForm = document.getElementById('loginForm');
     const loginSection = document.getElementById('loginSection');
     const mainFormSection = document.getElementById('mainFormSection');
     const loginStatus = document.getElementById('loginStatus'); 
 
+    // የLogin ማረጋገጫ ተግባር
     loginForm.addEventListener('submit', e => {
         e.preventDefault();
         const u = document.getElementById('username').value;
@@ -160,6 +163,7 @@
         }
     }); 
 
+    // ዳታ ወደ Google Sheets መላክ
     const form = document.getElementById('policeForm');
     const statusText = document.getElementById('status');
     const submitBtn = document.getElementById('submitBtn'); 
@@ -170,39 +174,18 @@
         statusText.className = "loading";
         statusText.innerText = "መረጃው እየተላከ ነው..."; 
 
-        const formData = new FormData(form);
-        const object = {};
-        formData.forEach((value, key) => { object[key] = value; });
-
-        fetch(scriptURL, { 
-            method: 'POST', 
-            body: JSON.stringify(object),
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.result === "success") {
-                if (data.isRepeatOffender) {
-                    // ስሙ ቀድሞ በSheets ውስጥ ካለ ማስጠንቀቂያ ይሰጣል
-                    statusText.className = "error";
-                    statusText.innerHTML = `መረጃው ተመዝግቧል! ✅<br><br><strong>ማስጠንቀቂያ፦</strong> ይህ ሰው ከዚህ በፊት በ<b>${data.oldCrime}</b> ወንጀል በ<b>${data.oldLocation}</b> ተመዝግቧል!`;
-                } else {
-                    statusText.className = "success";
-                    statusText.innerText = "አዲስ መረጃ በተሳካ ሁኔታ ተመዝግቧል! ✅";
-                }
+        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+            .then(response => {
+                statusText.className = "success";
+                statusText.innerText = "በተሳካ ሁኔታ ተመዝግቧል! ✅";
+                submitBtn.disabled = false;
                 form.reset(); 
-            } else {
+            })
+            .catch(error => {
                 statusText.className = "error";
-                statusText.innerText = "የመመዝገብ ስህተት አጋጥሟል!";
-            }
-        })
-        .catch(error => {
-            statusText.className = "error";
-            statusText.innerText = "ችግር አጋጥሟል! ኢንተርኔት መኖሩን ያረጋግጡ።";
-        })
-        .finally(() => {
-            submitBtn.disabled = false;
-        });
+                statusText.innerText = "ችግር አጋጥሟል! እንደገና ይሞክሩ።";
+                submitBtn.disabled = false;
+            });
     });
 </script> 
 
