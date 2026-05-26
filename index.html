@@ -6,43 +6,57 @@
     <title>የስልጤ ዞን ፖሊስ መዝገብ</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; text-align: center; margin: 0; padding: 20px; }
-        .form-container, .login-container { 
+        
+        .container { 
             background: white; width: 95%; max-width: 450px; margin: 20px auto; 
             padding: 30px; border-radius: 15px; border-top: 10px solid #003366;
             box-shadow: 0px 10px 25px rgba(0,0,0,0.1);
         }
-        h2 { color: #003366; margin-bottom: 5px; font-size: 24px; }
-        h3 { color: #666; margin-top: 0; font-weight: normal; font-size: 18px; margin-bottom: 25px; }
+
+        /* የሎጎ ስታይል */
+        .logo-container { margin-bottom: 15px; }
+        .dept-logo { width: 120px; height: auto; border-radius: 50%; border: 2px solid #003366; padding: 5px; }
+
+        h2 { color: #003366; margin-bottom: 5px; font-size: 22px; }
+        h3 { color: #666; margin-top: 0; font-weight: normal; font-size: 17px; margin-bottom: 25px; }
+        
         input, select { width: 100%; padding: 12px; margin: 12px 0; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 16px; outline: none; }
         input:focus, select:focus { border-color: #003366; box-shadow: 0 0 5px rgba(0,51,102,0.2); }
+        
         button { background-color: #003366; color: white; padding: 15px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-size: 18px; font-weight: bold; transition: 0.3s; margin-top: 10px; }
         button:hover { background-color: #002244; transform: translateY(-2px); }
-        button:disabled { background-color: #999; cursor: not-allowed; transform: none; }
-        #status, #loginStatus { margin-top: 20px; font-weight: bold; font-size: 16px; min-height: 24px; }
+        button:disabled { background-color: #999; cursor: not-allowed; }
+
+        #status, #loginStatus { margin-top: 20px; font-weight: bold; font-size: 15px; min-height: 24px; }
         .success { color: #28a745; }
         .error { color: #dc3545; }
         .loading { color: #003366; }
-        
-        /* መጀመሪያ የመመዝገቢያ ፎርሙ እንዲደበቅ ያደርጋል */
+
+        /* መጀመሪያ ፎርሙ እንዲደበቅ */
         #mainFormSection { display: none; }
     </style>
 </head>
 <body>
 
-<!-- 1. የመግቢያ (Login) ክፍል -->
-<div class="login-container" id="loginSection">
+<div class="container" id="loginSection">
+    <div class="logo-container">
+        <img src="https://i.ibb.co/v4m8NnN/1000013983.jpg" alt="Logo" class="dept-logo">
+    </div>
     <h2>የስልጤ ዞን ፖሊስ መምሪያ</h2>
-    <h3>እባክዎ መጀመሪያ ይግቡ</h3>
+    <h3>መረጃ ለመመዝገብ መጀመሪያ ይግቡ</h3>
+    
     <form id="loginForm">
-        <input type="text" id="username" placeholder="የተጠቃሚ ስም (Username)" required>
-        <input type="password" id="password" placeholder="የይለፍ ቃል (Password)" required>
+        <input type="text" id="username" placeholder="የተጠቃሚ ስም" required>
+        <input type="password" id="password" placeholder="የይለፍ ቃል" required>
         <button type="submit">ግባ</button>
     </form>
     <div id="loginStatus"></div>
 </div>
 
-<!-- 2. የወንጀለኛ መረጃ መመዝገቢያ ፎርም (በተሳካ ሁኔታ ከገቡ በኋላ የሚታይ) -->
-<div class="form-container" id="mainFormSection">
+<div class="container" id="mainFormSection">
+    <div class="logo-container">
+        <img src="https://i.ibb.co/v4m8NnN/1000013983.jpg" alt="Logo" class="dept-logo">
+    </div>
     <h2>የስልጤ ዞን ፖሊስ መምሪያ</h2>
     <h3>የወንጀለኛ መረጃ መመዝገቢያ</h3>
     
@@ -63,40 +77,37 @@
 </div>
 
 <script>
-    // የአንተ የGoogle Script ሊንክ
     const scriptURL = 'https://script.google.com/macros/s/AKfycbzaQVgxwZYMeAXTWgjHKLGyLYfSYK2nGW25uBzLtf3Zn1Tqjf8US41z7-IYLX86G3RJ/exec';
     
-    // *** እዚህ ጋር የምትፈልገውን የተጠቃሚ ስም እና ፓስወርድ ቀይር ***
-    const CORRECT_USERNAME = "silti_police"; 
-    const CORRECT_PASSWORD = "Ye21334304";  
+    // የተጠቃሚ ስም እና ፓስወርድ (እዚህ ጋር መቀየር ትችላለህ)
+    const CORRECT_USERNAME = "admin"; 
+    const CORRECT_PASSWORD = "123";  
 
     const loginForm = document.getElementById('loginForm');
     const loginSection = document.getElementById('loginSection');
     const mainFormSection = document.getElementById('mainFormSection');
     const loginStatus = document.getElementById('loginStatus');
 
-    // የLogin ማረጋገጫ ክንውን
+    // የLogin ማረጋገጫ
     loginForm.addEventListener('submit', e => {
         e.preventDefault();
-        const userInput = document.getElementById('username').value;
-        const passInput = document.getElementById('password').value;
+        const u = document.getElementById('username').value;
+        const p = document.getElementById('password').value;
 
-        if (userInput === CORRECT_USERNAME && passInput === CORRECT_PASSWORD) {
+        if (u === CORRECT_USERNAME && p === CORRECT_PASSWORD) {
             loginStatus.className = "success";
-            loginStatus.innerText = "በተሳካ ሁኔታ ገብተዋል...";
-            
-            // Login ፎርሙን ደብቆ የመመዝገቢያውን ፎርም ማሳየት
+            loginStatus.innerText = "በትክክል ገብተዋል...";
             setTimeout(() => {
                 loginSection.style.display = "none";
                 mainFormSection.style.display = "block";
-            }, 1000);
+            }, 800);
         } else {
             loginStatus.className = "error";
-            loginStatus.innerText = "የተጠቃሚ ስም ወይም የይለፍ ቃል ስህተት ነው!";
+            loginStatus.innerText = "ስህተት! የተጠቃሚ ስም ወይም የይለፍ ቃል አልተዛመደም።";
         }
     });
 
-    // መረጃውን ወደ Google Sheets የመላክ ክንውን
+    // ዳታ መላክ
     const form = document.getElementById('policeForm');
     const statusText = document.getElementById('status');
     const submitBtn = document.getElementById('submitBtn');
@@ -105,7 +116,7 @@
         e.preventDefault();
         submitBtn.disabled = true;
         statusText.className = "loading";
-        statusText.innerText = "መረጃው እየተላከ ነው... እባክህ ቆይ...";
+        statusText.innerText = "መረጃው እየተላከ ነው...";
 
         fetch(scriptURL, { method: 'POST', body: new FormData(form)})
             .then(response => {
@@ -116,9 +127,8 @@
             })
             .catch(error => {
                 statusText.className = "error";
-                statusText.innerText = "ስህተት አጋጥሟል! እንደገና ይሞክሩ።";
+                statusText.innerText = "ችግር አጋጥሟል! እንደገና ይሞክሩ።";
                 submitBtn.disabled = false;
-                console.error('Error!', error.message);
             });
     });
 </script>
