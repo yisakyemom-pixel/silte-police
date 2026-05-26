@@ -81,7 +81,7 @@
             margin-top: 20px; 
             font-weight: bold; 
             font-size: 15px; 
-            min-height: 24px; 
+            line-height: 1.6;
         }
         .success { color: #28a745; }
         .error { color: #dc3545; }
@@ -131,9 +131,9 @@
 </div> 
 
 <script>
+    // ያንተ የቀጥታ ሊንክ እዚህ ገብቷል
     const scriptURL = 'https://script.google.com/macros/s/AKfycbzaQVgxwZYMeAXTWgjHKLGyLYfSYK2nGW25uBzLtf3Zn1Tqjf8US41z7-IYLX86G3RJ/exec';
     
-    // የተጠቃሚ መረጃ
     const CORRECT_USERNAME = "silti_police"; 
     const CORRECT_PASSWORD = "Ye21334304";  
 
@@ -170,18 +170,39 @@
         statusText.className = "loading";
         statusText.innerText = "መረጃው እየተላከ ነው..."; 
 
-        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
-            .then(response => {
-                statusText.className = "success";
-                statusText.innerText = "በተሳካ ሁኔታ ተመዝግቧል! ✅";
-                submitBtn.disabled = false;
+        const formData = new FormData(form);
+        const object = {};
+        formData.forEach((value, key) => { object[key] = value; });
+
+        fetch(scriptURL, { 
+            method: 'POST', 
+            body: JSON.stringify(object),
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.result === "success") {
+                if (data.isRepeatOffender) {
+                    // ስሙ ቀድሞ በSheets ውስጥ ካለ ማስጠንቀቂያ ይሰጣል
+                    statusText.className = "error";
+                    statusText.innerHTML = `መረጃው ተመዝግቧል! ✅<br><br><strong>ማስጠንቀቂያ፦</strong> ይህ ሰው ከዚህ በፊት በ<b>${data.oldCrime}</b> ወንጀል በ<b>${data.oldLocation}</b> ተመዝግቧል!`;
+                } else {
+                    statusText.className = "success";
+                    statusText.innerText = "አዲስ መረጃ በተሳካ ሁኔታ ተመዝግቧል! ✅";
+                }
                 form.reset(); 
-            })
-            .catch(error => {
+            } else {
                 statusText.className = "error";
-                statusText.innerText = "ችግር አጋጥሟል! እንደገና ይሞክሩ።";
-                submitBtn.disabled = false;
-            });
+                statusText.innerText = "የመመዝገብ ስህተት አጋጥሟል!";
+            }
+        })
+        .catch(error => {
+            statusText.className = "error";
+            statusText.innerText = "ችግር አጋጥሟል! ኢንተርኔት መኖሩን ያረጋግጡ።";
+        })
+        .finally(() => {
+            submitBtn.disabled = false;
+        });
     });
 </script> 
 
