@@ -3,145 +3,202 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>የስልጤ ዞን ፖሊስ መዝገብ - Smart System</title>
+    <title>የስልጤ ዞን ፖሊስ መዝገብ - Dashboard</title>
     <style>
         :root {
             --primary-color: #003366;
             --secondary-color: #002244;
             --bg-color: #f0f2f5;
-            --danger-color: #dc3545;
-        }
+            --accent-color: #28a745;
+        } 
 
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             background-color: var(--bg-color); 
             text-align: center; 
             margin: 0; 
-            padding: 20px; 
+            padding: 10px; 
         }
         
         .container { 
             background: white; 
             width: 95%; 
-            max-width: 450px; 
-            margin: 20px auto; 
-            padding: 30px; 
+            max-width: 600px; 
+            margin: 10px auto; 
+            padding: 20px; 
             border-radius: 15px; 
             border-top: 10px solid var(--primary-color);
             box-shadow: 0px 10px 25px rgba(0,0,0,0.1);
         } 
 
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-weight: bold;
+            color: #666;
+        }
+
+        .tab-btn.active {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        .logo-container { margin-bottom: 10px; }
         .dept-logo { 
-            width: 100px; 
-            height: 100px; 
+            width: 80px; 
+            height: 80px; 
             object-fit: contain; 
             border-radius: 50%; 
-            border: 3px solid var(--primary-color); 
-            padding: 5px; 
-            margin-bottom: 15px;
+            border: 2px solid var(--primary-color); 
         } 
 
-        h2 { color: var(--primary-color); margin-bottom: 5px; font-size: 20px; }
-        h3 { color: #666; margin-top: 0; font-size: 15px; margin-bottom: 25px; }
-        
         input, select, textarea { 
             width: 100%; 
             padding: 12px; 
-            margin: 10px 0; 
+            margin: 8px 0; 
             border: 1px solid #ccc; 
             border-radius: 8px; 
             box-sizing: border-box; 
             font-size: 16px; 
-            font-family: inherit;
         }
         
         button { 
             background-color: var(--primary-color); 
             color: white; 
-            padding: 15px; 
+            padding: 12px; 
             border: none; 
             border-radius: 8px; 
             cursor: pointer; 
             width: 100%; 
-            font-size: 18px; 
+            font-size: 16px; 
             font-weight: bold; 
+            margin-top: 10px;
+        } 
+
+        /* Dashboard Table Styling */
+        .search-box {
+            margin-bottom: 15px;
+            border: 2px solid var(--primary-color);
         }
 
-        button:disabled { background-color: #999; }
+        .table-wrapper {
+            overflow-x: auto;
+            margin-top: 10px;
+        }
 
-        .logout-btn {
-            background-color: var(--danger-color);
-            margin-top: 20px;
+        table {
+            width: 100%;
+            border-collapse: collapse;
             font-size: 14px;
-            padding: 10px;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
+            text-align: right;
         }
 
-        #status { 
-            margin-top: 20px; 
-            font-weight: bold; 
+        th, td {
             padding: 10px;
-            border-radius: 5px;
+            border: 1px solid #ddd;
         }
-        .success { color: #28a745; background: #e8f5e9; }
-        .error { color: var(--danger-color); background: #ffebee; }
-        .warning { color: #856404; background: #fff3cd; border: 1px solid #ffeeba; }
 
+        th { background-color: var(--primary-color); color: white; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+
+        #loginSection, #mainFormSection { display: block; }
         #mainFormSection { display: none; }
+        .page { display: none; }
+        .page.active { display: block; }
+
+        .logout-btn { background-color: #dc3545; font-size: 12px; width: auto; padding: 5px 15px; }
     </style>
 </head>
 <body> 
 
 <div class="container" id="loginSection">
-    <img src="https://i.postimg.cc/6qMpxWdq/1779820211868.jpg" alt="Logo" class="dept-logo">
+    <div class="logo-container">
+        <img src="https://i.postimg.cc/6qMpxWdq/1779820211868.jpg" alt="Logo" class="dept-logo">
+    </div>
     <h2>የስልጤ ዞን ፖሊስ መምሪያ</h2>
-    <h3>ለመቀጠል መጀመሪያ ይግቡ</h3>
+    <p>ለመቀጠል መጀመሪያ ይግቡ</p>
     <form id="loginForm">
         <input type="text" id="username" placeholder="የተጠቃሚ ስም" required>
         <input type="password" id="password" placeholder="የይለፍ ቃል" required>
         <button type="submit">ግባ</button>
     </form>
-    <div id="loginStatus"></div>
+    <div id="loginStatus" style="color: red; margin-top: 10px;"></div>
 </div> 
 
 <div class="container" id="mainFormSection">
-    <img src="https://i.postimg.cc/6qMpxWdq/1779820211868.jpg" alt="Logo" class="dept-logo">
-    <h2>የወንጀለኛ መረጃ መመዝገቢያ</h2>
-    <hr style="opacity: 0.2;">
-    <form id="policeForm">
-        <input type="text" name="fullname" placeholder="የወንጀለኛው ሙሉ ስም" required>
-        <div style="display: flex; gap: 10px;">
-            <input type="number" name="age" placeholder="እድሜ" style="flex: 1;" required>
-            <select name="gender" style="flex: 1;" required>
-                <option value="">ጾታ</option>
-                <option value="ወንድ">ወንድ</option>
-                <option value="ሴት">ሴት</option>
-            </select>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <img src="https://i.postimg.cc/6qMpxWdq/1779820211868.jpg" style="width: 40px; height: 40px;">
+        <button class="logout-btn" onclick="location.reload()">ውጣ</button>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showPage('registerPage', this)">መረጃ መመዝገቢያ</button>
+        <button class="tab-btn" onclick="showPage('dashboardPage', this); fetchRecords();">የተመዘገቡ ዝርዝር</button>
+    </div>
+
+    <div id="registerPage" class="page active">
+        <h3>የወንጀለኛ መረጃ መመዝገቢያ</h3>
+        <form id="policeForm">
+            <input type="text" name="fullname" placeholder="የወንጀለኛው ሙሉ ስም" required>
+            <div style="display: flex; gap: 10px;">
+                <input type="number" name="age" placeholder="እድሜ" style="flex: 1;" required>
+                <select name="gender" style="flex: 1;" required>
+                    <option value="">ጾታ</option>
+                    <option value="ወንድ">ወንድ</option>
+                    <option value="ሴት">ሴት</option>
+                </select>
+            </div> 
+            <select name="crime" required>
+                <option value="">የወንጀል አይነት</option>
+                <option value="ስርቆት">ስርቆት</option>
+                <option value="ፀብ/አመፅ">ፀብ/አመፅ</option>
+                <option value="ማጭበርበር">ማጭበርበር</option>
+                <option value="ሌላ">ሌላ</option>
+            </select> 
+            <input type="text" name="location" placeholder="የተያዘበት ቦታ" required>
+            <textarea name="description" placeholder="ዝርዝር መግለጫ..." rows="3"></textarea> 
+            <button type="submit" id="submitBtn">መረጃውን መዝግብ</button>
+        </form>
+        <div id="status"></div>
+    </div>
+
+    <div id="dashboardPage" class="page">
+        <h3>የተመዘገቡ ወንጀለኞች ዝርዝር</h3>
+        <input type="text" id="searchInput" class="search-box" placeholder="በስም ወይም በወንጀል ፈልግ..." onkeyup="filterTable()">
+        
+        <div class="table-wrapper">
+            <table id="recordsTable">
+                <thead>
+                    <tr>
+                        <th>ስም</th>
+                        <th>ጾታ</th>
+                        <th>ወንጀል</th>
+                        <th>ቦታ</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    </tbody>
+            </table>
         </div>
-        <select name="crime" required>
-            <option value="">የወንጀል አይነት ይምረጡ</option>
-            <option value="ስርቆት">ስርቆት</option>
-            <option value="ፀብ/አመፅ">ፀብ/አመፅ</option>
-            <option value="ማጭበርበር">ማጭበርበር</option>
-            <option value="ሌላ">ሌላ</option>
-        </select>
-        <input type="text" name="location" placeholder="የተያዘበት ቦታ (ወረዳ/ቀበሌ)" required>
-        <textarea name="description" placeholder="የወንጀሉ ዝርዝር መግለጫ..." rows="3"></textarea>
-        <button type="submit" id="submitBtn">መረጃውን መዝግብ</button>
-    </form>
-    <div id="status"></div>
-    <button class="logout-btn" onclick="location.reload()">ውጣ</button>
+        <div id="loader" style="display:none; margin-top:10px;">መረጃ እየመጣ ነው...</div>
+    </div>
 </div> 
 
 <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbyL2kDVBvrBncr6Zoz0JBkomvcgODF71jnpSwxvlbjtC7-MUeCVdcVSNe0sv6Zf-PHctw/exec';
-    
+    const scriptURL = 'https://script.google.com/macros/s/AKfycby4UmCt_NLOtJeCDi1CFE5bVSebRjEWBSN62YXj_rmsWiWadV28_zWizm6oTHoXFiEaQg/exec';
     const CORRECT_USERNAME = "silti_police"; 
     const CORRECT_PASSWORD = "Ye21334304";  
 
+    // Login logic
     document.getElementById('loginForm').addEventListener('submit', e => {
         e.preventDefault();
         if (document.getElementById('username').value === CORRECT_USERNAME && 
@@ -149,43 +206,79 @@
             document.getElementById('loginSection').style.display = "none";
             document.getElementById('mainFormSection').style.display = "block";
         } else {
-            document.getElementById('loginStatus').innerText = "ስህተት! ይሞክሩ።";
-            document.getElementById('loginStatus').style.color = "red";
+            document.getElementById('loginStatus').innerText = "ስህተት! የይለፍ ቃል ተሳስቷል።";
         }
-    }); 
+    });
 
+    // Tab switcher
+    function showPage(pageId, btn) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+        btn.classList.add('active');
+    }
+
+    // Form submission
     const form = document.getElementById('policeForm');
-    const statusText = document.getElementById('status');
-    const submitBtn = document.getElementById('submitBtn'); 
-
     form.addEventListener('submit', e => {
         e.preventDefault();
-        if(!confirm("ለመመዝገብ እርግጠኛ ነዎት?")) return;
-
+        const submitBtn = document.getElementById('submitBtn');
+        const statusText = document.getElementById('status');
+        
         submitBtn.disabled = true;
-        statusText.className = "";
-        statusText.innerText = "በመፈተሽ ላይ..."; 
+        statusText.innerText = "በመላክ ላይ...";
 
         fetch(scriptURL, { method: 'POST', body: new FormData(form)})
-            .then(response => response.text())
-            .then(result => {
-                if (result.trim() === "ALREADY_EXISTS") {
-                    statusText.className = "warning";
-                    statusText.innerText = "⚠️ ማስጠንቀቂያ፡ ይህ ግለሰብ ከዚህ በፊት ሪከርድ አለበት!";
-                    alert("ማስጠንቀቂያ፡ ይህ ግለሰብ ቀድሞ ተመዝግቧል!");
-                } else {
-                    statusText.className = "success";
-                    statusText.innerText = "በተሳካ ሁኔታ ተመዝግቧል! ✅";
-                    form.reset(); 
-                }
+            .then(() => {
+                statusText.style.color = "green";
+                statusText.innerText = "በተሳካ ሁኔታ ተመዝግቧል! ✅";
+                form.reset();
                 submitBtn.disabled = false;
             })
-            .catch(error => {
-                statusText.className = "error";
+            .catch(() => {
+                statusText.style.color = "red";
                 statusText.innerText = "ስህተት አጋጥሟል!";
                 submitBtn.disabled = false;
             });
     });
+
+    // Fetch data for Dashboard
+    async function fetchRecords() {
+        const tableBody = document.getElementById('tableBody');
+        const loader = document.getElementById('loader');
+        tableBody.innerHTML = "";
+        loader.style.display = "block";
+
+        try {
+            // ማሳሰቢያ፡ Google Scriptዎ GET requestን እንዲያስተናግድና JSON እንዲመልስ መደረግ አለበት
+            const response = await fetch(scriptURL + "?action=read");
+            const data = await response.json();
+            
+            loader.style.display = "none";
+            data.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${row.fullname}</td>
+                    <td>${row.gender}</td>
+                    <td>${row.crime}</td>
+                    <td>${row.location}</td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        } catch (err) {
+            loader.innerText = "መረጃውን መጫን አልተቻለም። (Apps Script ላይ GET መስተካከል አለበት)";
+        }
+    }
+
+    // Search filter
+    function filterTable() {
+        const input = document.getElementById("searchInput").value.toLowerCase();
+        const rows = document.getElementById("tableBody").getElementsByTagName("tr");
+        for (let row of rows) {
+            row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none";
+        }
+    }
 </script> 
+
 </body>
 </html>
