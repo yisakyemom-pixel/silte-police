@@ -3,114 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>የስልጤ ዞን ፖሊስ መዝገብ - Dashboard</title>
+    <title>የስልጤ ዞን ፖሊስ መዝገብ ቤት</title>
+    <script src='https://meet.jit.si/external_api.js'></script>
     <style>
         :root {
             --primary-color: #003366;
-            --secondary-color: #002244;
             --bg-color: #f0f2f5;
-        } 
+        }
 
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: var(--bg-color); 
-            margin: 0; 
-            padding: 10px; 
-            direction: rtl; 
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 10px;
+            direction: ltr; /* ለእንግሊዝኛ ፊደላት አጻጻፍ እንዲመች */
+        }
+
+        .container {
+            background: white;
+            width: 95%;
+            max-width: 500px;
+            margin: 10px auto;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0px 10px 25px rgba(0,0,0,0.1);
             text-align: center;
         }
+
+        .header-logo { width: 70px; height: 70px; border-radius: 50%; margin-bottom: 10px; }
         
-        .container { 
-            background: white; 
-            width: 95%; 
-            max-width: 600px; 
-            margin: 10px auto; 
-            padding: 20px; 
-            border-radius: 15px; 
-            border-top: 10px solid var(--primary-color);
-            box-shadow: 0px 10px 25px rgba(0,0,0,0.1);
-            direction: ltr; 
-        } 
-
-        .tabs {
-            display: flex;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #ddd;
-        }
-
-        .tab-btn {
-            flex: 1;
-            padding: 12px;
-            cursor: pointer;
-            border: none;
-            background: none;
-            font-weight: bold;
-            color: #666;
-        }
-
-        .tab-btn.active {
-            color: var(--primary-color);
-            border-bottom: 3px solid var(--primary-color);
-            background-color: rgba(0, 51, 102, 0.05);
-        }
-
-        .dept-logo { 
-            width: 70px; height: 70px; 
-            border-radius: 50%; 
-            border: 2px solid var(--primary-color); 
-        } 
+        .tabs { display: flex; margin-bottom: 20px; background: #eee; border-radius: 8px; overflow: hidden; }
+        .tab-btn { flex: 1; padding: 12px; cursor: pointer; border: none; background: none; font-weight: bold; color: #555; }
+        .tab-btn.active { background: var(--primary-color); color: white; }
 
         input, select, textarea { 
             width: 100%; padding: 12px; margin: 8px 0; 
             border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; 
+            font-size: 16px;
         }
-        
-        button { 
+
+        button.submit-btn { 
             background-color: var(--primary-color); color: white; 
-            padding: 12px; border: none; border-radius: 8px; 
-            cursor: pointer; width: 100%; font-weight: bold; 
-        } 
-
-        .table-wrapper { overflow-x: auto; margin-top: 10px; }
-
-        table { width: 100%; border-collapse: collapse; font-size: 14px; text-align: center; }
-
-        th, td { padding: 10px; border: 1px solid #ddd; }
-
-        th { background-color: var(--primary-color); color: white; }
+            padding: 15px; border: none; border-radius: 8px; 
+            cursor: pointer; width: 100%; font-weight: bold; font-size: 16px;
+        }
 
         .page { display: none; }
         .page.active { display: block; }
 
-        .logout-btn { background-color: #dc3545; font-size: 12px; width: auto; padding: 5px 15px; margin-top: 0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
+        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: var(--primary-color); color: white; }
+
+        #video-container { 
+            width: 100%; height: 400px; background: #000; 
+            border-radius: 10px; margin-top: 10px; display: none; 
+        }
     </style>
 </head>
-<body> 
+<body>
 
 <div class="container" id="loginSection">
-    <img src="https://i.postimg.cc/6qMpxWdq/1779820211868.jpg" class="dept-logo">
-    <h2>የስልጤ ዞን ፖሊስ መምሪያ</h2>
-    <form id="loginForm">
-        <input type="text" id="username" placeholder="የተጠቃሚ ስም" required>
-        <input type="password" id="password" placeholder="የይለፍ ቃል" required>
-        <button type="submit">ግባ</button>
-    </form>
-    <div id="loginStatus" style="color: red; margin-top: 10px;"></div>
-</div> 
+    <img src="https://i.postimg.cc/6qMpxWdq/1779820211868.jpg" class="header-logo">
+    <h2>የስልጤ ዞን ፖሊስ</h2>
+    <input type="password" id="password" placeholder="የይለፍ ቃል ያስገቡ">
+    <button class="submit-btn" onclick="checkLogin()">ግባ</button>
+</div>
 
-<div class="container" id="mainFormSection" style="display: none;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-        <img src="https://i.postimg.cc/6qMpxWdq/1779820211868.jpg" style="width: 40px;">
-        <button class="logout-btn" onclick="location.reload()">ውጣ</button>
-    </div>
-
+<div class="container" id="mainSection" style="display: none;">
     <div class="tabs">
-        <button class="tab-btn active" id="t1" onclick="showPage('registerPage', 't1')">መረጃ መመዝገቢያ</button>
-        <button class="tab-btn" id="t2" onclick="showPage('dashboardPage', 't2'); fetchRecords();">የተመዘገቡ ዝርዝር</button>
+        <button class="tab-btn active" id="btn1" onclick="showPage('registerPage', 'btn1')">መዝግብ</button>
+        <button class="tab-btn" id="btn2" onclick="showPage('listPage', 'btn2'); fetchRecords();">ዝርዝር</button>
+        <button class="tab-btn" id="btn3" onclick="showPage('videoPage', 'btn3')">ቪዲዮ ጥሪ</button>
     </div>
 
     <div id="registerPage" class="page active">
-        <form id="policeForm">
+        <form id="crimeForm">
             <input type="text" name="fullname" placeholder="የወንጀለኛው ሙሉ ስም" required>
             <div style="display: flex; gap: 10px;">
                 <input type="number" name="age" placeholder="እድሜ" style="flex: 1;" required>
@@ -119,136 +87,120 @@
                     <option value="ወንድ">ወንድ</option>
                     <option value="ሴት">ሴት</option>
                 </select>
-            </div> 
-            <select name="crime" required>
-                <option value="">የወንጀል አይነት</option>
-                <option value="ስርቆት">ስርቆት</option>
-                <option value="ፀብ/አመፅ">ፀብ/አመፅ</option>
-                <option value="ማጭበርበር">ማጭበርበር</option>
-                <option value="ሌላ">ሌላ</option>
-            </select> 
+            </div>
+            <input type="text" name="crime" placeholder="የወንጀል አይነት" required>
             <input type="text" name="location" placeholder="የተያዘበት ቦታ" required>
-            <textarea name="description" placeholder="ዝርዝር መግለጫ..."></textarea> 
-            <button type="submit" id="submitBtn">መዝግብ</button>
+            <textarea name="description" placeholder="ዝርዝር መግለጫ (ካለ)..." rows="3"></textarea>
+            <button type="submit" class="submit-btn">በመዝገብ ላይ አኑር</button>
         </form>
-        <div id="status" style="margin-top: 10px; font-weight: bold;"></div>
     </div>
 
-    <div id="dashboardPage" class="page">
-        <input type="text" id="searchInput" placeholder="በስም ፈልግ..." onkeyup="filterTable()" style="border: 2px solid var(--primary-color);">
-        <div class="table-wrapper">
+    <div id="listPage" class="page">
+        <h3>የተመዘገቡ ወንጀለኞች</h3>
+        <div style="overflow-x: auto;">
             <table>
                 <thead>
                     <tr>
                         <th>ስም</th>
-                        <th>ጾታ</th>
                         <th>ወንጀል</th>
                         <th>ቦታ</th>
                     </tr>
                 </thead>
-                <tbody id="tableBody"></tbody>
+                <tbody id="recordTableBody">
+                    </tbody>
             </table>
         </div>
-        <div id="loader" style="display:none; margin-top:10px;">በመጫን ላይ...</div>
     </div>
-</div> 
+
+    <div id="videoPage" class="page">
+        <h3>የቪዲዮ ኮንፈረንስ ማዕከል</h3>
+        <p>ይህ ክፍል ለአዛዦችና ለመርማሪዎች የቀጥታ ግንኙነት የሚያገለግል ነው።</p>
+        <button class="submit-btn" id="startVideoBtn" onclick="startMeeting()">የቪዲዮ ጥሪ ጀምር</button>
+        <div id="video-container"></div>
+    </div>
+</div>
 
 <script>
-    // አዲሱ የ Script URL
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbxXKuBLFSf55BMQ_pCQMUid2VCOm3NOt00bvsNQowAHmu0PkjqTK5agnQG9anZfj-XJbw/exec';
-    
-    // Login logic
-    document.getElementById('loginForm').addEventListener('submit', e => {
-        e.preventDefault();
-        if (document.getElementById('username').value === "silti_police" && 
-            document.getElementById('password').value === "Ye21334304") {
-            document.getElementById('loginSection').style.display = "none";
-            document.getElementById('mainFormSection').style.display = "block";
-        } else {
-            document.getElementById('loginStatus').innerText = "የተጠቃሚ ስም ወይም የይለፍ ቃል ስህተት ነው!";
-        }
-    });
+    // አንተ የላክኸው URL
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzCbj6WBXE_Sagr9gsJnpRfvEm94h7IHsVqliLCwmp0THqLkj5A6imjhleAAHs7OAKUSg/exec';
 
-    function showPage(p, t) {
-        document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-        document.getElementById(p).classList.add('active');
-        document.getElementById(t).classList.add('active');
+    // የመግቢያ ማረጋገጫ
+    function checkLogin() {
+        const pass = document.getElementById('password').value;
+        if (pass === "Ye21334304") {
+            document.getElementById('loginSection').style.display = "none";
+            document.getElementById('mainSection').style.display = "block";
+        } else {
+            alert("የይለፍ ቃል ስህተት ነው!");
+        }
     }
 
-    // መረጃ መመዝገቢያ (Submit)
-    document.getElementById('policeForm').addEventListener('submit', e => {
-        e.preventDefault();
-        const btn = document.getElementById('submitBtn');
-        const status = document.getElementById('status');
-        
-        btn.disabled = true;
-        btn.innerText = "በመመዝገብ ላይ...";
-        status.innerText = "";
+    // ገጾችን መቀያየሪያ
+    function showPage(pageId, btnId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+        document.getElementById(btnId).classList.add('active');
+    }
 
-        fetch(scriptURL, { 
-            method: 'POST', 
-            mode: 'no-cors', // CORS ችግርን ለመከላከል
-            body: new FormData(e.target)
-        })
-        .then(() => { 
-            alert("መረጃው በትክክል ተመዝግቧል!"); 
-            status.innerText = "በተሳካ ሁኔታ ተመዝግቧል!";
-            status.style.color = "green";
-            e.target.reset(); 
-            btn.disabled = false; 
-            btn.innerText = "መዝግብ";
+    // መረጃ መላኪያ (ወደ Google Sheet)
+    document.getElementById('crimeForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const submitBtn = e.target.querySelector('button');
+        submitBtn.innerText = "በመመዝገብ ላይ...";
+        submitBtn.disabled = true;
+
+        fetch(scriptURL, { method: 'POST', body: new FormData(e.target)})
+        .then(response => {
+            alert("መረጃው በትክክል ተመዝግቧል!");
+            e.target.reset();
+            submitBtn.innerText = "በመዝገብ ላይ አኑር";
+            submitBtn.disabled = false;
         })
         .catch(error => {
-            console.error('Error!', error.message);
-            status.innerText = "ስህተት ተከስቷል! እባክዎ እንደገና ይሞክሩ።";
-            status.style.color = "red";
-            btn.disabled = false;
-            btn.innerText = "መዝግብ";
+            alert("ስህተት ተፈጥሯል!");
+            submitBtn.disabled = false;
         });
     });
 
-    // መረጃዎችን ማንበቢያ (Fetch)
+    // መረጃዎችን ከ Google Sheet ማምጫ
     async function fetchRecords() {
-        const body = document.getElementById('tableBody');
-        const loader = document.getElementById('loader');
-        body.innerHTML = ""; 
-        loader.style.display = "block";
-
+        const tableBody = document.getElementById('recordTableBody');
+        tableBody.innerHTML = "<tr><td colspan='3'>በመጫን ላይ...</td></tr>";
+        
         try {
-            const res = await fetch(scriptURL);
-            const data = await res.json();
-            loader.style.display = "none";
+            const response = await fetch(scriptURL + "?action=getRecords");
+            const data = await response.json();
+            tableBody.innerHTML = "";
             
-            if(data.length === 0) {
-                body.innerHTML = "<tr><td colspan='4'>ምንም የተመዘገበ መረጃ የለም።</td></tr>";
-                return;
-            }
-
             data.forEach(row => {
                 const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${row.fullname || '-'}</td>
-                    <td>${row.gender || '-'}</td>
-                    <td>${row.crime || '-'}</td>
-                    <td>${row.location || '-'}</td>
-                `;
-                body.appendChild(tr);
+                tr.innerHTML = `<td>${row.fullname}</td><td>${row.crime}</td><td>${row.location}</td>`;
+                tableBody.appendChild(tr);
             });
-        } catch(e) { 
-            loader.innerText = "መረጃውን መጫን አልተቻለም (Network Error)"; 
-            console.error(e);
+        } catch (e) {
+            tableBody.innerHTML = "<tr><td colspan='3'>መረጃ ማግኘት አልተቻለም።</td></tr>";
         }
     }
 
-    // መፈለጊያ (Search)
-    function filterTable() {
-        let input = document.getElementById("searchInput").value.toLowerCase();
-        let rows = document.querySelectorAll("#tableBody tr");
-        rows.forEach(r => {
-            r.style.display = r.innerText.toLowerCase().includes(input) ? "" : "none";
-        });
+    // የቪዲዮ ጥሪ መጀመሪያ
+    function startMeeting() {
+        document.getElementById('startVideoBtn').style.display = "none";
+        document.getElementById('video-container').style.display = "block";
+        
+        const domain = 'meet.jit.si';
+        const options = {
+            roomName: 'Silti_Police_HQ_Meeting_Room',
+            width: '100%',
+            height: 400,
+            parentNode: document.querySelector('#video-container'),
+            userInfo: {
+                displayName: 'Silti Police Officer'
+            }
+        };
+        const api = new JitsiMeetExternalAPI(domain, options);
     }
 </script>
+
 </body>
 </html>
