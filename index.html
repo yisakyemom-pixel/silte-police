@@ -9,15 +9,15 @@
             --primary-color: #003366;
             --secondary-color: #002244;
             --bg-color: #f0f2f5;
-            --accent-color: #28a745;
         } 
 
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             background-color: var(--bg-color); 
-            text-align: center; 
             margin: 0; 
             padding: 10px; 
+            direction: rtl; /* አማርኛን ለማመቻቸት */
+            text-align: center;
         }
         
         .container { 
@@ -29,6 +29,7 @@
             border-radius: 15px; 
             border-top: 10px solid var(--primary-color);
             box-shadow: 0px 10px 25px rgba(0,0,0,0.1);
+            direction: ltr; /* የፎርም አሰላለፍ ወደ መደበኛ ለመመለስ */
         } 
 
         .tabs {
@@ -45,7 +46,6 @@
             background: none;
             font-weight: bold;
             color: #666;
-            transition: 0.3s;
         }
 
         .tab-btn.active {
@@ -54,92 +54,42 @@
             background-color: rgba(0, 51, 102, 0.05);
         }
 
-        .logo-container { margin-bottom: 10px; }
         .dept-logo { 
-            width: 80px; 
-            height: 80px; 
-            object-fit: contain; 
+            width: 70px; height: 70px; 
             border-radius: 50%; 
             border: 2px solid var(--primary-color); 
         } 
 
         input, select, textarea { 
-            width: 100%; 
-            padding: 12px; 
-            margin: 8px 0; 
-            border: 1px solid #ccc; 
-            border-radius: 8px; 
-            box-sizing: border-box; 
-            font-size: 16px; 
-            font-family: inherit;
+            width: 100%; padding: 12px; margin: 8px 0; 
+            border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; 
         }
         
         button { 
-            background-color: var(--primary-color); 
-            color: white; 
-            padding: 12px; 
-            border: none; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            width: 100%; 
-            font-size: 16px; 
-            font-weight: bold; 
-            margin-top: 10px;
+            background-color: var(--primary-color); color: white; 
+            padding: 12px; border: none; border-radius: 8px; 
+            cursor: pointer; width: 100%; font-weight: bold; 
         } 
 
-        .search-box {
-            margin-bottom: 15px;
-            border: 2px solid var(--primary-color);
-            background-image: url('https://cdn-icons-png.flaticon.com/512/149/149852.png');
-            background-size: 20px;
-            background-repeat: no-repeat;
-            background-position: 10px center;
-            padding-left: 40px;
-        }
+        .table-wrapper { overflow-x: auto; margin-top: 10px; }
 
-        .table-wrapper {
-            overflow-x: auto;
-            margin-top: 10px;
-            border-radius: 8px;
-        }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; text-align: center; }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-            text-align: right;
-        }
-
-        th, td {
-            padding: 12px;
-            border: 1px solid #ddd;
-        }
+        th, td { padding: 10px; border: 1px solid #ddd; }
 
         th { background-color: var(--primary-color); color: white; }
-        tr:nth-child(even) { background-color: #f9f9f9; }
 
         .page { display: none; }
         .page.active { display: block; }
 
-        .logout-btn { 
-            background-color: #dc3545; 
-            font-size: 12px; 
-            width: auto; 
-            padding: 8px 15px; 
-            margin: 0;
-        }
-
-        #status { margin-top: 10px; font-weight: bold; }
+        .logout-btn { background-color: #dc3545; font-size: 12px; width: auto; padding: 5px 15px; margin-top: 0; }
     </style>
 </head>
 <body> 
 
 <div class="container" id="loginSection">
-    <div class="logo-container">
-        <img src="https://i.postimg.cc/6qMpxWdq/1779820211868.jpg" alt="Logo" class="dept-logo">
-    </div>
+    <img src="https://i.postimg.cc/6qMpxWdq/1779820211868.jpg" class="dept-logo">
     <h2>የስልጤ ዞን ፖሊስ መምሪያ</h2>
-    <p>ለመቀጠል መጀመሪያ ይግቡ</p>
     <form id="loginForm">
         <input type="text" id="username" placeholder="የተጠቃሚ ስም" required>
         <input type="password" id="password" placeholder="የይለፍ ቃል" required>
@@ -149,18 +99,17 @@
 </div> 
 
 <div class="container" id="mainFormSection" style="display: none;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-        <img src="https://i.postimg.cc/6qMpxWdq/1779820211868.jpg" style="width: 45px; height: 45px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <img src="https://i.postimg.cc/6qMpxWdq/1779820211868.jpg" style="width: 40px;">
         <button class="logout-btn" onclick="location.reload()">ውጣ</button>
     </div>
 
     <div class="tabs">
-        <button class="tab-btn active" id="tab1" onclick="showPage('registerPage', 'tab1')">መረጃ መመዝገቢያ</button>
-        <button class="tab-btn" id="tab2" onclick="showPage('dashboardPage', 'tab2'); fetchRecords();">የተመዘገቡ ዝርዝር</button>
+        <button class="tab-btn active" id="t1" onclick="showPage('registerPage', 't1')">መረጃ መመዝገቢያ</button>
+        <button class="tab-btn" id="t2" onclick="showPage('dashboardPage', 't2'); fetchRecords();">የተመዘገቡ ዝርዝር</button>
     </div>
 
     <div id="registerPage" class="page active">
-        <h3 style="color: var(--primary-color);">አዲስ የወንጀለኛ መረጃ</h3>
         <form id="policeForm">
             <input type="text" name="fullname" placeholder="የወንጀለኛው ሙሉ ስም" required>
             <div style="display: flex; gap: 10px;">
@@ -172,25 +121,23 @@
                 </select>
             </div> 
             <select name="crime" required>
-                <option value="">የወንጀል አይነት ይምረጡ</option>
+                <option value="">የወንጀል አይነት</option>
                 <option value="ስርቆት">ስርቆት</option>
                 <option value="ፀብ/አመፅ">ፀብ/አመፅ</option>
                 <option value="ማጭበርበር">ማጭበርበር</option>
                 <option value="ሌላ">ሌላ</option>
             </select> 
-            <input type="text" name="location" placeholder="የተያዘበት ቦታ (ወረዳ/ቀበሌ)" required>
-            <textarea name="description" placeholder="የወንጀሉ ዝርዝር መግለጫ..." rows="3"></textarea> 
-            <button type="submit" id="submitBtn">መረጃውን መዝግብ</button>
+            <input type="text" name="location" placeholder="የተያዘበት ቦታ" required>
+            <textarea name="description" placeholder="ዝርዝር መግለጫ..."></textarea> 
+            <button type="submit" id="submitBtn">መዝግብ</button>
         </form>
         <div id="status"></div>
     </div>
 
     <div id="dashboardPage" class="page">
-        <h3 style="color: var(--primary-color);">የተመዘገቡ ወንጀለኞች ዝርዝር</h3>
-        <input type="text" id="searchInput" class="search-box" placeholder="በስም ወይም በወንጀል አይነት ፈልግ..." onkeyup="filterTable()">
-        
+        <input type="text" id="searchInput" placeholder="በስም ፈልግ..." onkeyup="filterTable()" style="border: 2px solid var(--primary-color);">
         <div class="table-wrapper">
-            <table id="recordsTable">
+            <table>
                 <thead>
                     <tr>
                         <th>ስም</th>
@@ -199,117 +146,76 @@
                         <th>ቦታ</th>
                     </tr>
                 </thead>
-                <tbody id="tableBody">
-                    </tbody>
+                <tbody id="tableBody"></tbody>
             </table>
         </div>
-        <div id="loader" style="display:none; margin-top:20px; color: #666;">
-            <img src="https://i.gifer.com/ZKZg.gif" width="30"><br>መረጃ እየተጫነ ነው...
-        </div>
+        <div id="loader" style="display:none; margin-top:10px;">በመጫን ላይ...</div>
     </div>
 </div> 
 
 <script>
-    // የእርስዎ አዲሱ Google Script URL
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwy_8D0lnQ24JH9EdubWXMMHYHOjSZg7mVhCnOu55EYAAyVMikq651HXgyv6YUw0VUFUw/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycby5deS4rqkGk0vQ0U0L4u6gJXob0JClhyGfgmhmwtebf-5OA_VfmKVvO14nnez-cB2GeQ/exec';
     
-    const CORRECT_USERNAME = "silti_police"; 
-    const CORRECT_PASSWORD = "Ye21334304";  
-
-    // የመግቢያ ህግ
+    // Login
     document.getElementById('loginForm').addEventListener('submit', e => {
         e.preventDefault();
-        const u = document.getElementById('username').value;
-        const p = document.getElementById('password').value;
-        if (u === CORRECT_USERNAME && p === CORRECT_PASSWORD) {
+        if (document.getElementById('username').value === "silti_police" && 
+            document.getElementById('password').value === "Ye21334304") {
             document.getElementById('loginSection').style.display = "none";
             document.getElementById('mainFormSection').style.display = "block";
         } else {
-            document.getElementById('loginStatus').innerText = "ስህተት! የተጠቃሚ ስም ወይም የይለፍ ቃል አልተዛመደም።";
+            document.getElementById('loginStatus').innerText = "ስህተት!";
         }
     });
 
-    // ገጾችን ለመቀያየር (Tabs)
-    function showPage(pageId, tabId) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(pageId).classList.add('active');
-        document.getElementById(tabId).classList.add('active');
+    function showPage(p, t) {
+        document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById(p).classList.add('active');
+        document.getElementById(t).classList.add('active');
     }
 
-    // መረጃ ለመላክ
-    const form = document.getElementById('policeForm');
-    form.addEventListener('submit', e => {
+    // Submit
+    document.getElementById('policeForm').addEventListener('submit', e => {
         e.preventDefault();
-        const submitBtn = document.getElementById('submitBtn');
-        const statusText = document.getElementById('status');
-        
-        if(!confirm("ይህንን መረጃ ለመመዝገብ እርግጠኛ ነዎት?")) return;
-
-        submitBtn.disabled = true;
-        statusText.style.color = "blue";
-        statusText.innerText = "መረጃው እየተላከ ነው...";
-
-        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
-            .then(response => {
-                statusText.style.color = "green";
-                statusText.innerText = "በተሳካ ሁኔታ ተመዝግቧል! ✅";
-                form.reset();
-                submitBtn.disabled = false;
-            })
-            .catch(error => {
-                statusText.style.color = "red";
-                statusText.innerText = "ስህተት አጋጥሟል! እባክዎ በድጋሚ ይሞክሩ።";
-                submitBtn.disabled = false;
-            });
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = true;
+        fetch(scriptURL, { method: 'POST', body: new FormData(e.target)})
+        .then(() => { 
+            alert("ተመዝግቧል!"); 
+            e.target.reset(); 
+            btn.disabled = false; 
+        });
     });
 
-    // መረጃ ከ Google Sheet ላይ ለመጫን
+    // Fetch
     async function fetchRecords() {
-        const tableBody = document.getElementById('tableBody');
+        const body = document.getElementById('tableBody');
         const loader = document.getElementById('loader');
-        
-        tableBody.innerHTML = "";
-        loader.style.display = "block";
+        body.innerHTML = ""; loader.style.display = "block";
 
         try {
-            // ማሳሰቢያ፡ Google Script ላይ doGet(e) መኖሩን ያረጋግጡ
-            const response = await fetch(scriptURL);
-            const data = await response.json();
-            
+            const res = await fetch(scriptURL);
+            const data = await res.json();
             loader.style.display = "none";
-            if (data.length === 0) {
-                tableBody.innerHTML = "<tr><td colspan='4'>ምንም የተመዘገበ መረጃ የለም።</td></tr>";
-                return;
-            }
-
             data.forEach(row => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${row.fullname || '-'}</td>
-                    <td>${row.gender || '-'}</td>
-                    <td>${row.crime || '-'}</td>
-                    <td>${row.location || '-'}</td>
+                    <td>${row.fullname}</td>
+                    <td>${row.gender}</td>
+                    <td>${row.crime}</td>
+                    <td>${row.location}</td>
                 `;
-                tableBody.appendChild(tr);
+                body.appendChild(tr);
             });
-        } catch (err) {
-            loader.style.color = "red";
-            loader.innerText = "መረጃውን መጫን አልተቻለም። (Apps Script ላይ GET መስተካከል አለበት)";
-            console.error(err);
-        }
+        } catch(e) { loader.innerText = "ስህተት!"; }
     }
 
-    // በሰንጠረዥ ውስጥ ለመፈለግ (Search)
     function filterTable() {
-        const input = document.getElementById("searchInput").value.toLowerCase();
-        const rows = document.getElementById("tableBody").getElementsByTagName("tr");
-        for (let row of rows) {
-            const text = row.innerText.toLowerCase();
-            row.style.display = text.includes(input) ? "" : "none";
-        }
+        let input = document.getElementById("searchInput").value.toLowerCase();
+        let rows = document.querySelectorAll("#tableBody tr");
+        rows.forEach(r => r.style.display = r.innerText.toLowerCase().includes(input) ? "" : "none");
     }
-</script> 
-
+</script>
 </body>
 </html>
