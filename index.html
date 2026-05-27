@@ -39,17 +39,19 @@
 
         .tab-btn {
             flex: 1;
-            padding: 10px;
+            padding: 12px;
             cursor: pointer;
             border: none;
             background: none;
             font-weight: bold;
             color: #666;
+            transition: 0.3s;
         }
 
         .tab-btn.active {
             color: var(--primary-color);
             border-bottom: 3px solid var(--primary-color);
+            background-color: rgba(0, 51, 102, 0.05);
         }
 
         .logo-container { margin-bottom: 10px; }
@@ -69,6 +71,7 @@
             border-radius: 8px; 
             box-sizing: border-box; 
             font-size: 16px; 
+            font-family: inherit;
         }
         
         button { 
@@ -84,15 +87,20 @@
             margin-top: 10px;
         } 
 
-        /* Dashboard Table Styling */
         .search-box {
             margin-bottom: 15px;
             border: 2px solid var(--primary-color);
+            background-image: url('https://cdn-icons-png.flaticon.com/512/149/149852.png');
+            background-size: 20px;
+            background-repeat: no-repeat;
+            background-position: 10px center;
+            padding-left: 40px;
         }
 
         .table-wrapper {
             overflow-x: auto;
             margin-top: 10px;
+            border-radius: 8px;
         }
 
         table {
@@ -103,19 +111,25 @@
         }
 
         th, td {
-            padding: 10px;
+            padding: 12px;
             border: 1px solid #ddd;
         }
 
         th { background-color: var(--primary-color); color: white; }
         tr:nth-child(even) { background-color: #f9f9f9; }
 
-        #loginSection, #mainFormSection { display: block; }
-        #mainFormSection { display: none; }
         .page { display: none; }
         .page.active { display: block; }
 
-        .logout-btn { background-color: #dc3545; font-size: 12px; width: auto; padding: 5px 15px; }
+        .logout-btn { 
+            background-color: #dc3545; 
+            font-size: 12px; 
+            width: auto; 
+            padding: 8px 15px; 
+            margin: 0;
+        }
+
+        #status { margin-top: 10px; font-weight: bold; }
     </style>
 </head>
 <body> 
@@ -134,19 +148,19 @@
     <div id="loginStatus" style="color: red; margin-top: 10px;"></div>
 </div> 
 
-<div class="container" id="mainFormSection">
+<div class="container" id="mainFormSection" style="display: none;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-        <img src="https://i.postimg.cc/6qMpxWdq/1779820211868.jpg" style="width: 40px; height: 40px;">
+        <img src="https://i.postimg.cc/6qMpxWdq/1779820211868.jpg" style="width: 45px; height: 45px;">
         <button class="logout-btn" onclick="location.reload()">ውጣ</button>
     </div>
 
     <div class="tabs">
-        <button class="tab-btn active" onclick="showPage('registerPage', this)">መረጃ መመዝገቢያ</button>
-        <button class="tab-btn" onclick="showPage('dashboardPage', this); fetchRecords();">የተመዘገቡ ዝርዝር</button>
+        <button class="tab-btn active" id="tab1" onclick="showPage('registerPage', 'tab1')">መረጃ መመዝገቢያ</button>
+        <button class="tab-btn" id="tab2" onclick="showPage('dashboardPage', 'tab2'); fetchRecords();">የተመዘገቡ ዝርዝር</button>
     </div>
 
     <div id="registerPage" class="page active">
-        <h3>የወንጀለኛ መረጃ መመዝገቢያ</h3>
+        <h3 style="color: var(--primary-color);">አዲስ የወንጀለኛ መረጃ</h3>
         <form id="policeForm">
             <input type="text" name="fullname" placeholder="የወንጀለኛው ሙሉ ስም" required>
             <div style="display: flex; gap: 10px;">
@@ -158,22 +172,22 @@
                 </select>
             </div> 
             <select name="crime" required>
-                <option value="">የወንጀል አይነት</option>
+                <option value="">የወንጀል አይነት ይምረጡ</option>
                 <option value="ስርቆት">ስርቆት</option>
                 <option value="ፀብ/አመፅ">ፀብ/አመፅ</option>
                 <option value="ማጭበርበር">ማጭበርበር</option>
                 <option value="ሌላ">ሌላ</option>
             </select> 
-            <input type="text" name="location" placeholder="የተያዘበት ቦታ" required>
-            <textarea name="description" placeholder="ዝርዝር መግለጫ..." rows="3"></textarea> 
+            <input type="text" name="location" placeholder="የተያዘበት ቦታ (ወረዳ/ቀበሌ)" required>
+            <textarea name="description" placeholder="የወንጀሉ ዝርዝር መግለጫ..." rows="3"></textarea> 
             <button type="submit" id="submitBtn">መረጃውን መዝግብ</button>
         </form>
         <div id="status"></div>
     </div>
 
     <div id="dashboardPage" class="page">
-        <h3>የተመዘገቡ ወንጀለኞች ዝርዝር</h3>
-        <input type="text" id="searchInput" class="search-box" placeholder="በስም ወይም በወንጀል ፈልግ..." onkeyup="filterTable()">
+        <h3 style="color: var(--primary-color);">የተመዘገቡ ወንጀለኞች ዝርዝር</h3>
+        <input type="text" id="searchInput" class="search-box" placeholder="በስም ወይም በወንጀል አይነት ፈልግ..." onkeyup="filterTable()">
         
         <div class="table-wrapper">
             <table id="recordsTable">
@@ -189,93 +203,110 @@
                     </tbody>
             </table>
         </div>
-        <div id="loader" style="display:none; margin-top:10px;">መረጃ እየመጣ ነው...</div>
+        <div id="loader" style="display:none; margin-top:20px; color: #666;">
+            <img src="https://i.gifer.com/ZKZg.gif" width="30"><br>መረጃ እየተጫነ ነው...
+        </div>
     </div>
 </div> 
 
 <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycby4UmCt_NLOtJeCDi1CFE5bVSebRjEWBSN62YXj_rmsWiWadV28_zWizm6oTHoXFiEaQg/exec';
+    // የእርስዎ አዲሱ Google Script URL
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwy_8D0lnQ24JH9EdubWXMMHYHOjSZg7mVhCnOu55EYAAyVMikq651HXgyv6YUw0VUFUw/exec';
+    
     const CORRECT_USERNAME = "silti_police"; 
     const CORRECT_PASSWORD = "Ye21334304";  
 
-    // Login logic
+    // የመግቢያ ህግ
     document.getElementById('loginForm').addEventListener('submit', e => {
         e.preventDefault();
-        if (document.getElementById('username').value === CORRECT_USERNAME && 
-            document.getElementById('password').value === CORRECT_PASSWORD) {
+        const u = document.getElementById('username').value;
+        const p = document.getElementById('password').value;
+        if (u === CORRECT_USERNAME && p === CORRECT_PASSWORD) {
             document.getElementById('loginSection').style.display = "none";
             document.getElementById('mainFormSection').style.display = "block";
         } else {
-            document.getElementById('loginStatus').innerText = "ስህተት! የይለፍ ቃል ተሳስቷል።";
+            document.getElementById('loginStatus').innerText = "ስህተት! የተጠቃሚ ስም ወይም የይለፍ ቃል አልተዛመደም።";
         }
     });
 
-    // Tab switcher
-    function showPage(pageId, btn) {
+    // ገጾችን ለመቀያየር (Tabs)
+    function showPage(pageId, tabId) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(pageId).classList.add('active');
-        btn.classList.add('active');
+        document.getElementById(tabId).classList.add('active');
     }
 
-    // Form submission
+    // መረጃ ለመላክ
     const form = document.getElementById('policeForm');
     form.addEventListener('submit', e => {
         e.preventDefault();
         const submitBtn = document.getElementById('submitBtn');
         const statusText = document.getElementById('status');
         
+        if(!confirm("ይህንን መረጃ ለመመዝገብ እርግጠኛ ነዎት?")) return;
+
         submitBtn.disabled = true;
-        statusText.innerText = "በመላክ ላይ...";
+        statusText.style.color = "blue";
+        statusText.innerText = "መረጃው እየተላከ ነው...";
 
         fetch(scriptURL, { method: 'POST', body: new FormData(form)})
-            .then(() => {
+            .then(response => {
                 statusText.style.color = "green";
                 statusText.innerText = "በተሳካ ሁኔታ ተመዝግቧል! ✅";
                 form.reset();
                 submitBtn.disabled = false;
             })
-            .catch(() => {
+            .catch(error => {
                 statusText.style.color = "red";
-                statusText.innerText = "ስህተት አጋጥሟል!";
+                statusText.innerText = "ስህተት አጋጥሟል! እባክዎ በድጋሚ ይሞክሩ።";
                 submitBtn.disabled = false;
             });
     });
 
-    // Fetch data for Dashboard
+    // መረጃ ከ Google Sheet ላይ ለመጫን
     async function fetchRecords() {
         const tableBody = document.getElementById('tableBody');
         const loader = document.getElementById('loader');
+        
         tableBody.innerHTML = "";
         loader.style.display = "block";
 
         try {
-            // ማሳሰቢያ፡ Google Scriptዎ GET requestን እንዲያስተናግድና JSON እንዲመልስ መደረግ አለበት
-            const response = await fetch(scriptURL + "?action=read");
+            // ማሳሰቢያ፡ Google Script ላይ doGet(e) መኖሩን ያረጋግጡ
+            const response = await fetch(scriptURL);
             const data = await response.json();
             
             loader.style.display = "none";
+            if (data.length === 0) {
+                tableBody.innerHTML = "<tr><td colspan='4'>ምንም የተመዘገበ መረጃ የለም።</td></tr>";
+                return;
+            }
+
             data.forEach(row => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${row.fullname}</td>
-                    <td>${row.gender}</td>
-                    <td>${row.crime}</td>
-                    <td>${row.location}</td>
+                    <td>${row.fullname || '-'}</td>
+                    <td>${row.gender || '-'}</td>
+                    <td>${row.crime || '-'}</td>
+                    <td>${row.location || '-'}</td>
                 `;
                 tableBody.appendChild(tr);
             });
         } catch (err) {
+            loader.style.color = "red";
             loader.innerText = "መረጃውን መጫን አልተቻለም። (Apps Script ላይ GET መስተካከል አለበት)";
+            console.error(err);
         }
     }
 
-    // Search filter
+    // በሰንጠረዥ ውስጥ ለመፈለግ (Search)
     function filterTable() {
         const input = document.getElementById("searchInput").value.toLowerCase();
         const rows = document.getElementById("tableBody").getElementsByTagName("tr");
         for (let row of rows) {
-            row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none";
+            const text = row.innerText.toLowerCase();
+            row.style.display = text.includes(input) ? "" : "none";
         }
     }
 </script> 
