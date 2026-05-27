@@ -16,7 +16,7 @@
             background-color: var(--bg-color); 
             margin: 0; 
             padding: 10px; 
-            direction: rtl; /* አማርኛን ለማመቻቸት */
+            direction: rtl; 
             text-align: center;
         }
         
@@ -29,7 +29,7 @@
             border-radius: 15px; 
             border-top: 10px solid var(--primary-color);
             box-shadow: 0px 10px 25px rgba(0,0,0,0.1);
-            direction: ltr; /* የፎርም አሰላለፍ ወደ መደበኛ ለመመለስ */
+            direction: ltr; 
         } 
 
         .tabs {
@@ -131,7 +131,7 @@
             <textarea name="description" placeholder="ዝርዝር መግለጫ..."></textarea> 
             <button type="submit" id="submitBtn">መዝግብ</button>
         </form>
-        <div id="status"></div>
+        <div id="status" style="margin-top: 10px; font-weight: bold;"></div>
     </div>
 
     <div id="dashboardPage" class="page">
@@ -154,9 +154,10 @@
 </div> 
 
 <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycby5deS4rqkGk0vQ0U0L4u6gJXob0JClhyGfgmhmwtebf-5OA_VfmKVvO14nnez-cB2GeQ/exec';
+    // አዲሱ የ Script URL
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxXKuBLFSf55BMQ_pCQMUid2VCOm3NOt00bvsNQowAHmu0PkjqTK5agnQG9anZfj-XJbw/exec';
     
-    // Login
+    // Login logic
     document.getElementById('loginForm').addEventListener('submit', e => {
         e.preventDefault();
         if (document.getElementById('username').value === "silti_police" && 
@@ -164,7 +165,7 @@
             document.getElementById('loginSection').style.display = "none";
             document.getElementById('mainFormSection').style.display = "block";
         } else {
-            document.getElementById('loginStatus').innerText = "ስህተት!";
+            document.getElementById('loginStatus').innerText = "የተጠቃሚ ስም ወይም የይለፍ ቃል ስህተት ነው!";
         }
     });
 
@@ -175,46 +176,78 @@
         document.getElementById(t).classList.add('active');
     }
 
-    // Submit
+    // መረጃ መመዝገቢያ (Submit)
     document.getElementById('policeForm').addEventListener('submit', e => {
         e.preventDefault();
         const btn = document.getElementById('submitBtn');
+        const status = document.getElementById('status');
+        
         btn.disabled = true;
-        fetch(scriptURL, { method: 'POST', body: new FormData(e.target)})
+        btn.innerText = "በመመዝገብ ላይ...";
+        status.innerText = "";
+
+        fetch(scriptURL, { 
+            method: 'POST', 
+            mode: 'no-cors', // CORS ችግርን ለመከላከል
+            body: new FormData(e.target)
+        })
         .then(() => { 
-            alert("ተመዝግቧል!"); 
+            alert("መረጃው በትክክል ተመዝግቧል!"); 
+            status.innerText = "በተሳካ ሁኔታ ተመዝግቧል!";
+            status.style.color = "green";
             e.target.reset(); 
             btn.disabled = false; 
+            btn.innerText = "መዝግብ";
+        })
+        .catch(error => {
+            console.error('Error!', error.message);
+            status.innerText = "ስህተት ተከስቷል! እባክዎ እንደገና ይሞክሩ።";
+            status.style.color = "red";
+            btn.disabled = false;
+            btn.innerText = "መዝግብ";
         });
     });
 
-    // Fetch
+    // መረጃዎችን ማንበቢያ (Fetch)
     async function fetchRecords() {
         const body = document.getElementById('tableBody');
         const loader = document.getElementById('loader');
-        body.innerHTML = ""; loader.style.display = "block";
+        body.innerHTML = ""; 
+        loader.style.display = "block";
 
         try {
             const res = await fetch(scriptURL);
             const data = await res.json();
             loader.style.display = "none";
+            
+            if(data.length === 0) {
+                body.innerHTML = "<tr><td colspan='4'>ምንም የተመዘገበ መረጃ የለም።</td></tr>";
+                return;
+            }
+
             data.forEach(row => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${row.fullname}</td>
-                    <td>${row.gender}</td>
-                    <td>${row.crime}</td>
-                    <td>${row.location}</td>
+                    <td>${row.fullname || '-'}</td>
+                    <td>${row.gender || '-'}</td>
+                    <td>${row.crime || '-'}</td>
+                    <td>${row.location || '-'}</td>
                 `;
                 body.appendChild(tr);
             });
-        } catch(e) { loader.innerText = "ስህተት!"; }
+        } catch(e) { 
+            loader.innerText = "መረጃውን መጫን አልተቻለም (Network Error)"; 
+            console.error(e);
+        }
     }
 
+    // መፈለጊያ (Search)
     function filterTable() {
         let input = document.getElementById("searchInput").value.toLowerCase();
         let rows = document.querySelectorAll("#tableBody tr");
-        rows.forEach(r => r.style.display = r.innerText.toLowerCase().includes(input) ? "" : "none");
+        rows.forEach(r => {
+            r.style.display = r.innerText.toLowerCase().includes(input) ? "" : "none";
+        });
     }
 </script>
 </body>
