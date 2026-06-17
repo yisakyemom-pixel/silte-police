@@ -5,46 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ሚቶ ወረዳ ፖሊስ መረጃ መዝገብ</title>
     <style>
-        :root {
-            --primary-color: #004a99; 
-            --bg-color: #f4f7f6;
-        } 
-
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: var(--bg-color); 
-            text-align: center; margin: 0; padding: 15px;
-        }
-        
-        .container { 
-            background: white; width: 95%; max-width: 450px; 
-            margin: 10px auto; padding: 25px; border-radius: 15px; 
-            border-top: 10px solid var(--primary-color);
-            box-shadow: 0px 10px 25px rgba(0,0,0,0.1);
-        } 
-
+        :root { --primary-color: #004a99; --bg-color: #f4f7f6; } 
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); text-align: center; margin: 0; padding: 15px; }
+        .container { background: white; width: 95%; max-width: 450px; margin: 10px auto; padding: 25px; border-radius: 15px; border-top: 10px solid var(--primary-color); box-shadow: 0px 10px 25px rgba(0,0,0,0.1); } 
         .dept-logo { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--primary-color); padding: 5px; margin-bottom: 15px; }
-
         h2 { color: var(--primary-color); font-size: 20px; margin-bottom: 20px; }
-        
-        input, select, textarea { 
-            width: 100%; padding: 12px; margin: 10px 0; 
-            border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; 
-            font-size: 16px; outline: none;
-        }
-        
-        button { 
-            background-color: var(--primary-color); color: white; 
-            padding: 15px; border: none; border-radius: 8px; 
-            cursor: pointer; width: 100%; font-size: 18px; font-weight: bold; 
-        }
-
+        input, select, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 16px; outline: none; }
+        button { background-color: var(--primary-color); color: white; padding: 15px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-size: 18px; font-weight: bold; }
         button:disabled { background-color: #999; }
-
         #status { margin-top: 20px; font-weight: bold; }
         .success { color: #28a745; }
         .error { color: #dc3545; }
-
         #mainFormSection { display: none; }
     </style>
 </head>
@@ -65,10 +36,8 @@
     <img src="https://i.postimg.cc/SsRSXtTs/a4b729b8-5de3-4cfc-8bba-7d49a84f6c5b-removalai-preview.png" class="dept-logo" style="width: 60px; height: 60px;">
     <h2>የመረጃ መመዝገቢያ</h2>
     <hr style="opacity: 0.1;">
-    
     <form id="policeForm">
         <input type="text" name="fullname" placeholder="የወንጀለኛው ሙሉ ስም" required>
-        
         <div style="display: flex; gap: 10px;">
             <input type="number" name="age" placeholder="እድሜ" style="flex: 1;" required>
             <select name="gender" style="flex: 1;" required>
@@ -77,7 +46,6 @@
                 <option value="ሴት">ሴት</option>
             </select>
         </div> 
-
         <select name="crime" required>
             <option value="">የወንጀል አይነት</option>
             <option value="ስርቆት">ስርቆት</option>
@@ -85,13 +53,10 @@
             <option value="ማጭበርበር">ማጭበርበር</option>
             <option value="ሌላ">ሌላ</option>
         </select> 
-
         <input type="text" name="location" placeholder="የተፈፀመበት ቦታ (ሚቶ)" required>
         <textarea name="description" placeholder="ዝርዝር መግለጫ..." rows="3"></textarea> 
-
         <button type="submit" id="submitBtn">መረጃውን መዝግብ</button>
     </form>
-    
     <div id="status"></div>
     <button onclick="location.reload()" style="background:#dc3545; margin-top:20px; font-size:14px; padding:10px;">ውጣ</button>
 </div> 
@@ -130,4 +95,10 @@
                 form.reset(); 
             })
             .catch(error => {
-                statusText.innerHTML = "<span class='error'>ስህተት አጋጥሟል! እንደገና ይሞክሩ።
+                statusText.innerHTML = "<span class='error'>ስህተት አጋጥሟል! እንደገና ይሞክሩ።</span>";
+                submitBtn.disabled = false;
+            });
+    });
+</script> 
+</body>
+</html>
