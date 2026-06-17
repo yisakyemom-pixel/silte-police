@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>የስልጤ ዞን ፖሊስ መዝገብ</title>
+    <title>ሚቶ ወረዳ ፖሊስ መረጃ መዝገብ</title>
     <style>
         :root {
-            --primary-color: #003366;
-            --bg-color: #f0f2f5;
+            --primary-color: #004a99; 
+            --bg-color: #f4f7f6;
         } 
 
         body { 
@@ -23,7 +23,7 @@
             box-shadow: 0px 10px 25px rgba(0,0,0,0.1);
         } 
 
-        .dept-logo { width: 90px; height: 90px; border-radius: 50%; border: 3px solid var(--primary-color); padding: 5px; margin-bottom: 15px; }
+        .dept-logo { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--primary-color); padding: 5px; margin-bottom: 15px; }
 
         h2 { color: var(--primary-color); font-size: 20px; margin-bottom: 20px; }
         
@@ -51,8 +51,8 @@
 <body> 
 
 <div class="container" id="loginSection">
-    <img src="https://i.postimg.cc/6qMpxWdq/1779820211868.jpg" class="dept-logo">
-    <h2>የስልጤ ዞን ፖሊስ መምሪያ</h2>
+    <img src="https://i.postimg.cc/SsRSXtTs/a4b729b8-5de3-4cfc-8bba-7d49a84f6c5b-removalai-preview.png" class="dept-logo">
+    <h2>ሚቶ ወረዳ ፖሊስ ጽህፈት ቤት</h2>
     <form id="loginForm">
         <input type="text" id="username" placeholder="የተጠቃሚ ስም" required>
         <input type="password" id="password" placeholder="የይለፍ ቃል" required>
@@ -62,7 +62,7 @@
 </div> 
 
 <div class="container" id="mainFormSection">
-    <img src="https://i.postimg.cc/6qMpxWdq/1779820211868.jpg" class="dept-logo" style="width: 50px; height: 50px;">
+    <img src="https://i.postimg.cc/SsRSXtTs/a4b729b8-5de3-4cfc-8bba-7d49a84f6c5b-removalai-preview.png" class="dept-logo" style="width: 60px; height: 60px;">
     <h2>የመረጃ መመዝገቢያ</h2>
     <hr style="opacity: 0.1;">
     
@@ -86,7 +86,7 @@
             <option value="ሌላ">ሌላ</option>
         </select> 
 
-        <input type="text" name="location" placeholder="የተያዘበት ቦታ" required>
+        <input type="text" name="location" placeholder="የተፈፀመበት ቦታ (ሚቶ)" required>
         <textarea name="description" placeholder="ዝርዝር መግለጫ..." rows="3"></textarea> 
 
         <button type="submit" id="submitBtn">መረጃውን መዝግብ</button>
@@ -97,31 +97,28 @@
 </div> 
 
 <script>
-    // አንተ የላክኸው አዲሱ URL
     const scriptURL = 'https://script.google.com/macros/s/AKfycbznOzQvBtmODMqJce50Pyq_OiciTxWHJOcjZOzXut7ScOC0NFqIzq22Jd2gYaDO6caXMg/exec';
 
-    // መግቢያ
     document.getElementById('loginForm').addEventListener('submit', e => {
         e.preventDefault();
         const u = document.getElementById('username').value;
         const p = document.getElementById('password').value; 
 
-        if (u === "silti_police" && p === "Ye21334304") {
+        if (u === "mitto_police" && p === "Mito@2026") {
             document.getElementById('loginSection').style.display = "none";
             document.getElementById('mainFormSection').style.display = "block";
         } else {
-            document.getElementById('loginStatus').innerHTML = "<span class='error'>ስህተት!</span>";
+            document.getElementById('loginStatus').innerHTML = "<span class='error'>ስህተት! የተጠቃሚ ስም ወይም የይለፍ ቃል ተሳስቷል።</span>";
         }
     }); 
 
-    // መረጃ መላክ
     const form = document.getElementById('policeForm');
     const statusText = document.getElementById('status');
     const submitBtn = document.getElementById('submitBtn'); 
 
     form.addEventListener('submit', e => {
         e.preventDefault();
-        if(!confirm("ለመመዝገብ እርግጠኛ ኖት?")) return; 
+        if(!confirm("መረጃውን ለመመዝገብ እርግጠኛ ኖት?")) return; 
 
         submitBtn.disabled = true;
         statusText.innerHTML = "በመላክ ላይ..."; 
@@ -133,10 +130,4 @@
                 form.reset(); 
             })
             .catch(error => {
-                statusText.innerHTML = "<span class='error'>ስህተት አጋጥሟል!</span>";
-                submitBtn.disabled = false;
-            });
-    });
-</script> 
-</body>
-</html>
+                statusText.innerHTML = "<span class='error'>ስህተት አጋጥሟል! እንደገና ይሞክሩ።
