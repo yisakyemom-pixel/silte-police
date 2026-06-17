@@ -3,48 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>መንደር 4 የሮንድ መረጃ መመዝገቢያ</title>
+    <title>ሚቶ ወረዳ ፖሊስ ጽ/ቤት</title>
     <style>
-        :root { --primary-color: #2e7d32; --bg-color: #f1f8e9; } /* አረንጓዴ ለደህንነት */
+        :root { --primary-color: #004a99; --bg-color: #f4f7f6; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); text-align: center; margin: 0; padding: 15px; }
         .container { background: white; width: 95%; max-width: 450px; margin: 10px auto; padding: 25px; border-radius: 15px; border-top: 10px solid var(--primary-color); box-shadow: 0px 10px 25px rgba(0,0,0,0.1); }
-        .dept-logo { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--primary-color); padding: 5px; margin-bottom: 15px; }
         h2 { color: var(--primary-color); font-size: 20px; margin-bottom: 20px; }
-        input, select, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 16px; outline: none; }
+        input, select, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
         button { background-color: var(--primary-color); color: white; padding: 15px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-size: 18px; font-weight: bold; }
-        #status { margin-top: 20px; font-weight: bold; }
-        .success { color: #2e7d32; }
-        .error { color: #d32f2f; }
         #mainFormSection { display: none; }
+        .error { color: #dc3545; }
     </style>
 </head>
 <body>
 
 <div class="container" id="loginSection">
-    <img src="https://i.postimg.cc/SsRSXtTs/a4b729b8-5de3-4cfc-8bba-7d49a84f6c5b-removalai-preview.png" class="dept-logo">
-    <h2>መንደር 4 የሮንድ መረጃ መግቢያ</h2>
+    <h2>ሚቶ ወረዳ ፖሊስ ጽ/ቤት</h2>
     <form id="loginForm">
         <input type="text" id="username" placeholder="የተጠቃሚ ስም" required>
         <input type="password" id="password" placeholder="የይለፍ ቃል" required>
         <button type="submit">ግባ</button>
     </form>
-    <div id="loginStatus" style="margin-top: 15px;"></div>
+    <div id="loginStatus"></div>
 </div>
 
 <div class="container" id="mainFormSection">
-    <h2>የሮንድ እንቅስቃሴ መመዝገቢያ</h2>
+    <h2>መንደር 4 ሮንድ ተረኞች</h2>
     <form id="patrolForm">
-        <input type="text" name="fullname" placeholder="የሮንድ አባል ስም" required>
-        <input type="text" name="age" placeholder="የሮንድ ወቅት (ለምሳሌ፡ ሌሊት 2-6)" required>
-        <select name="gender" required>
-            <option value="">የአካባቢ ሁኔታ</option>
-            <option value="ሰላማዊ">ሰላማዊ</option>
-            <option value="አጠራጣሪ">አጠራጣሪ</option>
-            <option value="ችግር ያለበት">ችግር ያለበት</option>
-        </select>
-        <input type="text" name="crime" placeholder="የተደረገ ክትትል/ስራ" required>
-        <input type="text" name="location" placeholder="መንደር 4 የተሸፈነበት ቦታ" required>
-        <textarea name="description" placeholder="ዝርዝር መግለጫና የተስተዋለ..." rows="3"></textarea>
-        <button type="submit" id="submitBtn">መረጃውን ላክ</button>
+        <input type="text" name="fullname" placeholder="የተረኛ ስም" required>
+        <input type="date" name="date" required title="የወጣበት ቀን">
+        <input type="tel" name="phone" placeholder="ስልክ ቁጥር" required>
+        <textarea name="remarks" placeholder="ልዩ የሚጻፍ ነገር ካለ..." rows="3"></textarea>
+        <button type="submit" id="submitBtn">መረጃውን አስመዝግብ</button>
     </form>
-    <div id="status">
+    <div id="status" style="margin-top:15px; font-weight:bold;"></div>
+    <button onclick="location.reload()" style="background:#dc3545; margin-top:20px;">ውጣ</button>
+</div>
+
+<script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbznOzQvBtmODMqJce50Pyq_OiciTxWHJOcjZOzXut7ScOC0NFqIzq22Jd2gYaDO6caXMg/exec';
+
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        // ሎጊን ስክሪኑ እንዳይመለስ በ localStorage መጠቀም እንችላለን
+        if (document.getElementById('username').value === "mito" && document.getElementById('password').value === "123") {
+            document.getElementById('loginSection').style.display = "none";
+            document.getElementById('mainFormSection').style.display = "block";
+        } else {
+            document.getElementById('loginStatus').innerHTML = "<span class='error'>ስህተት!</span>";
+        }
+    });
+
+    document.getElementById('patrolForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = true;
+        btn.innerText = "በመላክ ላይ...";
+        
+        fetch(scriptURL, { method: 'POST', body: new FormData(this)})
+            .then(() => {
+                document.getElementById('status').innerHTML = "በተሳካ ሁኔታ ተመዝግቧል! ✅";
+                this.reset();
+                btn.disabled = false;
+                btn.innerText = "መረጃውን አስመዝግብ";
+            });
+    });
+</script>
+</body>
+</html>
